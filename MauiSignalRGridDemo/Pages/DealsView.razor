@@ -45,10 +45,10 @@ else
             .WithUrl("https://localhost:7155/dealshub")
             .Build();
 
+        // Receive deal updates in real-time
         hubConnection.On<DealUpdate>("UpdateDeal", (updatedDeal) =>
         {
             var liveDeal = deals.Single(d => d.SmartID == updatedDeal.SmartID);
-            //_list += updatedDeal?.SmartID ?? "null";
             liveDeal.Price = updatedDeal.NewPrice;
             updatedDeals[updatedDeal.SmartID] = DateTimeOffset.Now;
             StateHasChanged();
@@ -56,8 +56,10 @@ else
 
         await hubConnection.StartAsync();
 
+        // Get initial deal list
         deals = await hubConnection.InvokeAsync<IList<DealInfo>>("GetDeals");
 
+        // Update deal list every 1sec to show which ones were recently updated
         updateTimer = new System.Threading.Timer(async _ =>
         {
             await InvokeAsync(StateHasChanged);
