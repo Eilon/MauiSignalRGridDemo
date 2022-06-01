@@ -29,6 +29,7 @@ else
 
     private string? GetUpdatedDealClass(DealInfo deal)
     {
+        // Show recent deal updates with a particular style
         if (updatedDeals.TryGetValue(deal.SmartID, out var lastUpdated))
         {
             if ((DateTimeOffset.Now - lastUpdated) < TimeSpan.FromSeconds(2))
