@@ -13,12 +13,33 @@
 }
 else
 {
-    <ul id="messagesList">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Smart ID</th>
+                <th>Trade Date</th>
+                <th>Trader</th>
+                <th>Product Type</th>
+                <th>Transaction Type</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
         @foreach (var deal in deals)
         {
-            <li class="@GetUpdatedDealClass(deal)">@deal.SmartID ($@deal.Price)</li>
+                <tr class="@GetUpdatedDealClass(deal)">
+                    <th>@deal.SmartID</th>
+                    <th>@deal.TradeDate</th>
+                    <th>@deal.Trader</th>
+                    <th>@deal.ProductType</th>
+                    <th>@deal.TransactionType</th>
+                    <th>@deal.Price.Value.ToString("0.00")</th>
+                    <th>TODO</th>
+                </tr>
         }
-    </ul>
+        </tbody>
+    </table>
 }
 
 @code {
