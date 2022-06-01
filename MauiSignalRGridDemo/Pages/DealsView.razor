@@ -26,17 +26,27 @@ else
             </tr>
         </thead>
         <tbody>
-        @foreach (var deal in deals)
+        @foreach (var deal in deals.OrderBy(d => !pinnedDeals.ContainsKey(d.SmartID)))
         {
-                <tr class="@GetUpdatedDealClass(deal)">
-                    <th>@deal.SmartID</th>
-                    <th>@deal.TradeDate</th>
-                    <th>@deal.Trader</th>
-                    <th>@deal.ProductType</th>
-                    <th>@deal.TransactionType</th>
-                    <th>@deal.Price.Value.ToString("0.00")</th>
-                    <th>TODO</th>
-                </tr>
+            var isPinned = pinnedDeals.ContainsKey(deal.SmartID);
+            <tr class="@GetUpdatedDealClass(deal)">
+                <th>
+                        @if (isPinned)
+                    {
+                        <span class="oi oi-pin" aria-hidden="true"></span>
+                    }
+                    @deal.SmartID
+                </th>
+                <th>@deal.TradeDate</th>
+                <th>@deal.Trader</th>
+                <th>@deal.ProductType</th>
+                <th>@deal.TransactionType</th>
+                <th>@deal.Price.Value.ToString("0.00")</th>
+                <th>
+                    <button @onclick="() => PinDeal(deal.SmartID)">@(isPinned ? "Unpin" : "Pin")</button>
+                    <button @onclick="() => ExecuteDeal(deal)">Execute</button>
+                </th>
+            </tr>
         }
         </tbody>
     </table>
@@ -46,7 +56,28 @@ else
     private HubConnection? hubConnection;
     private IList<DealInfo> deals;
     ConcurrentDictionary<string, DateTimeOffset> updatedDeals = new();
+    ConcurrentDictionary<string, object> pinnedDeals = new();
     System.Threading.Timer updateTimer;
+
+    private void PinDeal(string smartID)
+    {
+        if (pinnedDeals.TryGetValue(smartID, out var _))
+        {
+            pinnedDeals.TryRemove(smartID, out var _);
+        }
+        else
+        {
+            pinnedDeals[smartID] = null;
+        }
+    }
+
+    private async Task ExecuteDeal(DealInfo deal)
+    {
+        await Application.Current.MainPage.DisplayAlert(
+            title: "Execute Deal",
+            message: $"Executing {deal.TransactionType} transaction deal for {deal.SmartID}, @ {deal.Price.Value.ToString("0.00")}",
+            cancel: "OK");
+    }
 
     private string? GetUpdatedDealClass(DealInfo deal)
     {
