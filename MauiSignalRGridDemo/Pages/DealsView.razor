@@ -1,0 +1,78 @@
+﻿@page "/dealsview"
+@using Microsoft.AspNetCore.SignalR.Client
+@using DemoSharedTypes
+@using System.Collections.Concurrent
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
+
+<h1>Deals</h1>
+
+@if (deals == null)
+{
+    <h2>Loading...</h2>
+}
+else
+{
+    <ul id="messagesList">
+        @foreach (var deal in deals)
+        {
+            <li class="@GetUpdatedDealClass(deal)">@deal.SmartID ($@deal.Price)</li>
+        }
+    </ul>
+}
+
+@code {
+    private HubConnection? hubConnection;
+    private IList<DealInfo> deals;
+    ConcurrentDictionary<string, DateTimeOffset> updatedDeals = new();
+    System.Threading.Timer updateTimer;
+
+    private string? GetUpdatedDealClass(DealInfo deal)
+    {
+        if (updatedDeals.TryGetValue(deal.SmartID, out var lastUpdated))
+        {
+            if ((DateTimeOffset.Now - lastUpdated) < TimeSpan.FromSeconds(2))
+            {
+                return "updatedDeal";
+            }
+        }
+        return null;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl("https://localhost:7155/dealshub")
+            .Build();
+
+        hubConnection.On<DealUpdate>("UpdateDeal", (updatedDeal) =>
+        {
+            var liveDeal = deals.Single(d => d.SmartID == updatedDeal.SmartID);
+            //_list += updatedDeal?.SmartID ?? "null";
+            liveDeal.Price = updatedDeal.NewPrice;
+            updatedDeals[updatedDeal.SmartID] = DateTimeOffset.Now;
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+
+        deals = await hubConnection.InvokeAsync<IList<DealInfo>>("GetDeals");
+
+        updateTimer = new System.Threading.Timer(async _ =>
+        {
+            await InvokeAsync(StateHasChanged);
+        }, state: null, dueTime: 0, period: 1_000);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+        if (updateTimer is not null)
+        {
+            await updateTimer.DisposeAsync();
+        }
+    }
+}

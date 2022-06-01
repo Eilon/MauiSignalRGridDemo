@@ -82,3 +82,7 @@ a, .btn-link {
 		padding-left: env(safe-area-inset-left);
 	}
 }
+
+.updatedDeal {
+    border: 1px solid red;
+}
