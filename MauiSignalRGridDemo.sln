@@ -4,7 +4,9 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiSignalRGridDemo", "MauiSignalRGridDemo\MauiSignalRGridDemo.csproj", "{CCAC7DA7-372A-4301-899C-6FE53C63E7F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreSignalRServer", "AspNetCoreSignalRServer\AspNetCoreSignalRServer.csproj", "{5ACC1A1D-92B1-4E82-880B-CB32723D6D9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreSignalRServer", "AspNetCoreSignalRServer\AspNetCoreSignalRServer.csproj", "{5ACC1A1D-92B1-4E82-880B-CB32723D6D9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoSharedTypes", "DemoSharedTypes\DemoSharedTypes.csproj", "{B517ED6A-BDB2-4C48-A9EF-43B63747D2FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +24,10 @@ Global
 		{5ACC1A1D-92B1-4E82-880B-CB32723D6D9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ACC1A1D-92B1-4E82-880B-CB32723D6D9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ACC1A1D-92B1-4E82-880B-CB32723D6D9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B517ED6A-BDB2-4C48-A9EF-43B63747D2FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B517ED6A-BDB2-4C48-A9EF-43B63747D2FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B517ED6A-BDB2-4C48-A9EF-43B63747D2FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B517ED6A-BDB2-4C48-A9EF-43B63747D2FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
