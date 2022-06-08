@@ -84,9 +84,13 @@ else
         // Show recent deal updates with a particular style
         if (updatedDeals.TryGetValue(deal.SmartID!, out var lastUpdated))
         {
+            if ((DateTimeOffset.Now - lastUpdated) < TimeSpan.FromSeconds(1))
+            {
+                return "freshUpdatedDeal";
+            }
             if ((DateTimeOffset.Now - lastUpdated) < TimeSpan.FromSeconds(2))
             {
-                return "updatedDeal";
+                return "staleUpdatedDeal";
             }
         }
         return null;

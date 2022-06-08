@@ -83,6 +83,10 @@ a, .btn-link {
 	}
 }
 
-.updatedDeal {
+.freshUpdatedDeal {
     background-color: #ffaaaa80;
+}
+
+.staleUpdatedDeal {
+    background-color: #ffaaaa30;
 }
