@@ -98,6 +98,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        // Update deal list every 1sec to show which ones were recently updated
+        updateTimer = new System.Threading.Timer(async _ =>
+        {
+            await InvokeAsync(StateHasChanged);
+        }, state: null, dueTime: Timeout.Infinite, period: Timeout.Infinite); // Setting dueTime=Infinite means don't start the timer (and the period doesn't matter)
+
         hubConnection = new HubConnectionBuilder()
             .WithUrl("https://localhost:7155/dealshub")
             .Build();
@@ -116,11 +122,8 @@ else
         // Get initial deal list
         deals = await hubConnection.InvokeAsync<IList<DealInfo>>("GetDeals");
 
-        // Update deal list every 1sec to show which ones were recently updated
-        updateTimer = new System.Threading.Timer(async _ =>
-        {
-            await InvokeAsync(StateHasChanged);
-        }, state: null, dueTime: 0, period: 1_000);
+        // Start the timer immediately and update every 1 second
+        updateTimer.Change(dueTime: 0, period: 1_000);
     }
 
     public async ValueTask DisposeAsync()
