@@ -13,7 +13,10 @@ builder.Services.AddResponseCompression(opts =>
         new[] { "application/octet-stream" });
 });
 
-builder.Services.AddHostedService<DealUpdater>();
+// Register deal services:
+// 1. Background service to update deals
+builder.Services.AddHostedService<DealUpdaterService>();
+// 2. Deals storage service to get list of all deals
 builder.Services.AddSingleton<DealsStore>();
 
 

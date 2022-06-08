@@ -26,24 +26,24 @@ else
             </tr>
         </thead>
         <tbody>
-        @foreach (var deal in deals.OrderBy(d => !pinnedDeals.ContainsKey(d.SmartID)))
+        @foreach (var deal in deals.OrderBy(d => !pinnedDeals.ContainsKey(d.SmartID!)))
         {
-            var isPinned = pinnedDeals.ContainsKey(deal.SmartID);
+            var isPinned = pinnedDeals.ContainsKey(deal.SmartID!);
             <tr class="@GetUpdatedDealClass(deal)">
                 <th>
                         @if (isPinned)
                     {
                         <span class="oi oi-pin" aria-hidden="true"></span>
                     }
-                    @deal.SmartID
+                    @deal.SmartID!
                 </th>
                 <th>@deal.TradeDate</th>
                 <th>@deal.Trader</th>
                 <th>@deal.ProductType</th>
                 <th>@deal.TransactionType</th>
-                <th>@deal.Price.Value.ToString("0.00")</th>
+                <th>@deal.Price!.Value.ToString("0.00")</th>
                 <th>
-                    <button @onclick="() => PinDeal(deal.SmartID)">@(isPinned ? "Unpin" : "Pin")</button>
+                    <button @onclick="() => PinDeal(deal.SmartID!)">@(isPinned ? "Unpin" : "Pin")</button>
                     <button @onclick="() => ExecuteDeal(deal)">Execute</button>
                 </th>
             </tr>
@@ -54,10 +54,10 @@ else
 
 @code {
     private HubConnection? hubConnection;
-    private IList<DealInfo> deals;
+    private IList<DealInfo>? deals;
     ConcurrentDictionary<string, DateTimeOffset> updatedDeals = new();
     ConcurrentDictionary<string, object> pinnedDeals = new();
-    System.Threading.Timer updateTimer;
+    System.Threading.Timer? updateTimer;
 
     private void PinDeal(string smartID)
     {
@@ -67,22 +67,22 @@ else
         }
         else
         {
-            pinnedDeals[smartID] = null;
+            pinnedDeals.Remove(smartID, out var _);
         }
     }
 
     private async Task ExecuteDeal(DealInfo deal)
     {
-        await Application.Current.MainPage.DisplayAlert(
+        await Application.Current!.MainPage!.DisplayAlert(
             title: "Execute Deal",
-            message: $"Executing {deal.TransactionType} transaction deal for {deal.SmartID}, @ {deal.Price.Value.ToString("0.00")}",
+            message: $"Executing {deal.TransactionType} transaction deal for {deal.SmartID}, @ {deal.Price!.Value.ToString("0.00")}",
             cancel: "OK");
     }
 
     private string? GetUpdatedDealClass(DealInfo deal)
     {
         // Show recent deal updates with a particular style
-        if (updatedDeals.TryGetValue(deal.SmartID, out var lastUpdated))
+        if (updatedDeals.TryGetValue(deal.SmartID!, out var lastUpdated))
         {
             if ((DateTimeOffset.Now - lastUpdated) < TimeSpan.FromSeconds(2))
             {
@@ -101,9 +101,9 @@ else
         // Receive deal updates in real-time
         hubConnection.On<DealUpdate>("UpdateDeal", (updatedDeal) =>
         {
-            var liveDeal = deals.Single(d => d.SmartID == updatedDeal.SmartID);
+            var liveDeal = deals!.Single(d => d.SmartID == updatedDeal.SmartID);
             liveDeal.Price = updatedDeal.NewPrice;
-            updatedDeals[updatedDeal.SmartID] = DateTimeOffset.Now;
+            updatedDeals[updatedDeal.SmartID!] = DateTimeOffset.Now;
             StateHasChanged();
         });
 

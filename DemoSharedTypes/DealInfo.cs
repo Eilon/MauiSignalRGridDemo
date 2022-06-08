@@ -1,5 +1,8 @@
 ﻿namespace DemoSharedTypes
 {
+    /// <summary>
+    /// Defines a deal in the system.
+    /// </summary>
     public class DealInfo
     {
         public string? SmartID { get; set; }
