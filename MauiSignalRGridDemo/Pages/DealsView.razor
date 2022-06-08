@@ -30,22 +30,22 @@ else
         {
             var isPinned = pinnedDeals.ContainsKey(deal.SmartID!);
             <tr class="@GetUpdatedDealClass(deal)">
-                <th>
-                        @if (isPinned)
+                <td>
+                    @if (isPinned)
                     {
                         <span class="oi oi-pin" aria-hidden="true"></span>
                     }
-                    @deal.SmartID!
-                </th>
-                <th>@deal.TradeDate</th>
-                <th>@deal.Trader</th>
-                <th>@deal.ProductType</th>
-                <th>@deal.TransactionType</th>
-                <th>@deal.Price!.Value.ToString("0.00")</th>
-                <th>
+                    @deal.SmartID
+                </td>
+                <td>@deal.TradeDate</td>
+                <td>@deal.Trader</td>
+                <td>@deal.ProductType</td>
+                <td>@deal.TransactionType</td>
+                <td>@deal.Price!.Value.ToString("0.00")</td>
+                <td>
                     <button @onclick="() => PinDeal(deal.SmartID!)">@(isPinned ? "Unpin" : "Pin")</button>
                     <button @onclick="() => ExecuteDeal(deal)">Execute</button>
-                </th>
+                </td>
             </tr>
         }
         </tbody>
@@ -56,7 +56,7 @@ else
     private HubConnection? hubConnection;
     private IList<DealInfo>? deals;
     ConcurrentDictionary<string, DateTimeOffset> updatedDeals = new();
-    ConcurrentDictionary<string, object> pinnedDeals = new();
+    ConcurrentDictionary<string, object?> pinnedDeals = new();
     System.Threading.Timer? updateTimer;
 
     private void PinDeal(string smartID)
@@ -67,7 +67,7 @@ else
         }
         else
         {
-            pinnedDeals.Remove(smartID, out var _);
+            pinnedDeals.TryAdd(smartID, null);
         }
     }
 
