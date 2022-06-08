@@ -6,7 +6,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiSignalRGridDemo", "Maui
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreSignalRServer", "AspNetCoreSignalRServer\AspNetCoreSignalRServer.csproj", "{5ACC1A1D-92B1-4E82-880B-CB32723D6D9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoSharedTypes", "DemoSharedTypes\DemoSharedTypes.csproj", "{B517ED6A-BDB2-4C48-A9EF-43B63747D2FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoSharedTypes", "DemoSharedTypes\DemoSharedTypes.csproj", "{B517ED6A-BDB2-4C48-A9EF-43B63747D2FC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D16C1566-53FE-4F1E-BE88-03F768AD5962}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
