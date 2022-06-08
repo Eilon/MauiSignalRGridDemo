@@ -29,7 +29,7 @@ else
         @foreach (var deal in deals.OrderBy(d => !pinnedDeals.ContainsKey(d.SmartID!)))
         {
             var isPinned = pinnedDeals.ContainsKey(deal.SmartID!);
-            <tr class="@GetUpdatedDealClass(deal)">
+            <tr class="@GetUpdatedDealClass(deal)" @key=deal.SmartID>
                 <td>
                     @if (isPinned)
                     {
